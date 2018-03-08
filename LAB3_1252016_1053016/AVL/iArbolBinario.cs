@@ -7,7 +7,7 @@ namespace AVL
     public interface iArbolBinario<T>
     {
         void Insert(T value);
-        void Insert(T value, Nodo<T> node);
+        Nodo<T> Insert(T value, Nodo<T> node);
         void Delete(T value);
         void Delete(T value, Nodo<T> node);
         List<Nodo<T>> PreOrden(Nodo<T> node);
