@@ -76,7 +76,7 @@ namespace AVL
 
             if (factor > 1)
             {
-                if (FactorBalance(actual.Left) > 0)
+                if (FactorBalance(actual.Left) < 0)
                    return actual = RotarDerIzq(actual);
                 else
                    return actual = RotarIzqIzq(actual);
