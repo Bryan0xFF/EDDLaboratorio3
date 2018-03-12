@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AVL
 {
-    class AVLTree<T> : iArbolBinario<T> where T : IComparable<T>
+   public class AVLTree<T> : iArbolBinario<T> where T : IComparable<T>
     {
         public Nodo<T> cabeza;
         private List<Nodo<T>> inOrden = new List<Nodo<T>>();
