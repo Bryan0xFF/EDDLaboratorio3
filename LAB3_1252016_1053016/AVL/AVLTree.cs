@@ -16,7 +16,7 @@ namespace AVL
             throw new NotImplementedException();
         }
 
-        public void Delete(T value, Nodo<T> node)
+        public void Delete(Nodo<T> node, T value)
         {
             throw new NotImplementedException();
         }
@@ -38,73 +38,51 @@ namespace AVL
 
         public void Insert(T value)
         {
-            Insert(value, cabeza);
+            Insert(cabeza, value);
         }
 
-        public Nodo<T> Insert(T value, Nodo<T> node)
+        public Nodo<T> Insert(Nodo<T> node, T value)
         {
-            if (cabeza.Value == null) // Primer nodo insertado
-            {
-                cabeza.Value = value;
-                return cabeza;
-            }
-
-            if (cabeza.Value.CompareTo(default(T)) == 0) //Si es un dato numérico y se inserta el primer nodo
-            {
-                cabeza.Value = value;
-                return cabeza;
-            }
-
-            else if (node == null) // se crea un nuevo nodo con el dato ingresado
+            if (node == null)
             {
                 node = new Nodo<T>();
                 node.Value = value;
             }
+
+            else if (value.CompareTo(node.Value) == -1)
+            {
+                node.Left = Insert(node.Left, value);
+                node.Left.Parent = node;
+                node = Balancear(node);
+            }
             else
             {
-                if (node.Value.CompareTo(value) > 0)
-                {
-                    node.Left = Insert(value, node.Left);
-                    node.Left.Parent = node;
-                    //  if (Math.Abs(FactorBalance(node.Left.Parent)) == 2)
-                    Balancear(node.Parent.Left);
-
-                    return node;
-                }
-                if (node.Value.CompareTo(value) < 0)
-                {
-                    node.Right = Insert(value, node.Right);
-                    node.Right.Parent = node;
-                    //   if (Math.Abs(FactorBalance(node.Right.Parent)) == 2)
-                    Balancear(node.Parent.Right);
-                    return node;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Ya contiene una llave igual");
-                }
+                node.Right = Insert(node.Right, value);
+                node.Right.Parent = node;
+                node = Balancear(node);
             }
             return node;
         }
 
-        public void Balancear(Nodo<T> actual)
+        public Nodo<T> Balancear(Nodo<T> actual)
         {
             int factor = FactorBalance(actual);
 
             if (factor > 1)
             {
                 if (FactorBalance(actual.Left) > 0)
-                    actual = RotarIzqIzq(actual);
+                   return actual = RotarIzqIzq(actual);
                 else
-                    actual = RotarIzqDer(actual);
+                   return actual = RotarIzqDer(actual);
             }
             else if (factor < -1)
             {
                 if (FactorBalance(actual.Right) > 0)
-                    actual = RotarDerDer(actual);
+                   return actual = RotarDerDer(actual);
                 else
-                    actual = RotarIzqDer(actual);
+                   return actual = RotarIzqDer(actual);
             }
+            return actual;
         }
 
         public int ObtenerAltura(Nodo<T> node)
