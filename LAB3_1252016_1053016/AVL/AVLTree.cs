@@ -36,13 +36,19 @@ namespace AVL
             throw new NotImplementedException();
         }
 
-        public void Insert(T value)
+        public Nodo<T> Insert(T value)
         {
-            Insert(cabeza, value);
+            return cabeza = Insert(cabeza, value);
         }
 
         public Nodo<T> Insert(Nodo<T> node, T value)
         {
+            if (cabeza == null)
+            {
+                cabeza = new Nodo<T>();
+                cabeza.Value = value;
+                return cabeza;
+            }
             if (node == null)
             {
                 node = new Nodo<T>();
@@ -71,16 +77,16 @@ namespace AVL
             if (factor > 1)
             {
                 if (FactorBalance(actual.Left) > 0)
-                   return actual = RotarIzqIzq(actual);
+                   return actual = RotarDerIzq(actual);
                 else
-                   return actual = RotarIzqDer(actual);
+                   return actual = RotarIzqIzq(actual);
             }
             else if (factor < -1)
             {
                 if (FactorBalance(actual.Right) > 0)
+                    return actual = RotarIzqDer(actual);
+                else                   
                    return actual = RotarDerDer(actual);
-                else
-                   return actual = RotarIzqDer(actual);
             }
             return actual;
         }
