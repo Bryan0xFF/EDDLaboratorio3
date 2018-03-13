@@ -10,16 +10,121 @@ namespace AVL
         private List<Nodo<T>> inOrden = new List<Nodo<T>>();
         private List<Nodo<T>> preOrden = new List<Nodo<T>>();
         private List<Nodo<T>> postOrden = new List<Nodo<T>>();
-        private List<string> logs = new List<string>(); 
+        private List<string> logs = new List<string>();
+
+        public Nodo<T> FindMin(Nodo<T> root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            else if (root.Left == null)
+            {
+                return root;
+            }
+
+            else
+            {
+                return FindMin(root.Left);
+            }
+        }
 
         public void Delete(T value)
         {
-            throw new NotImplementedException();
+            Delete(value);
         }
 
-        public void Delete(Nodo<T> node, T value)
+        public void Delete(T value, Nodo<T> node)
         {
-            throw new NotImplementedException();
+            Nodo<T> Min;
+            if (value == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (cabeza.Value.CompareTo(value) == 0 && cabeza.Left == null && cabeza.Right == null)
+            {
+                cabeza = null;
+            }
+
+            else if (value.CompareTo(node.Value) == -1)
+            {
+                Delete(value, node.Left);
+              //  node = Balancear(node);
+            } //look in the left
+
+            else if (value.CompareTo(node.Value) > 0)
+            {
+                Delete(value, node.Right);
+               // node = Balancear(node);
+            } //look in the right
+
+            else
+            { //found node to delete
+
+                if (node.Left != null && node.Right != null) //two children
+                {
+                    Min = FindMin(node.Right);
+                    node.Value = Min.Value;
+                    Delete(node.Value, node.Right);
+                  //  node = Balancear(node);
+                }
+
+                else
+                { //one or zero child
+
+                    if (node.Left == null)//The root node is to be deleted
+                    {
+                        if (node.Parent == null)
+                        {
+                            cabeza = node.Right;
+                            cabeza.Parent = null;
+                        }
+                        else
+                        {
+                            if (node.Right != null)
+                            {
+                                node.Right.Parent = node.Parent;
+                            }
+
+                            if (node == node.Parent.Left)
+                            {
+                                node.Parent.Left = node.Right;
+                            }
+
+                            else
+                            {
+                                node.Parent.Right = node.Right;
+                            }
+                        }
+                        node = Balancear(node);
+                    }
+                    else if (node.Right == null)
+                    {
+                        if (node.Parent == null)
+                        {
+                            cabeza = node.Left;
+                            cabeza.Parent = null;
+                        }
+                        else
+                        {
+
+                            node.Left.Parent = node.Parent;
+
+                            if (node == node.Parent.Left)
+                            {
+                                node.Parent.Left = node.Left;
+                            }
+                            else
+                            {
+                                node.Parent.Right = node.Left;
+                            }
+                        }
+                        node = Balancear(node);
+                    }
+                }
+            }
         }
 
         public List<Nodo<T>> InOrden(Nodo<T> node)
