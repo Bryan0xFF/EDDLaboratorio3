@@ -1,0 +1,30 @@
+﻿@model LAB3_1252016_1053016.Models.Partido
+
+@{
+    ViewBag.Title = "CargaManualPais";
+}
+
+<h2>Carga por país:</h2>
+
+@using (@Html.BeginForm("InsertarManual", "Partido", FormMethod.Post))
+{
+    <p>Número de partido:</p>
+    <p>@Html.TextBoxFor(Model => Model.NoPartido)</p>
+    @:&nbsp;
+    <p>Hora de partido:</p>
+    <p>@Html.TextBoxFor(Model => Model.FechaPartido)</p>
+    @:&nbsp;
+    <p>Grupo:</p>
+    <p>@Html.TextBoxFor(Model => Model.Grupo)</p>
+    @:&nbsp;
+    <p>Pais 1:</p>
+    <p>@Html.TextBoxFor(Model => Model.Pais1)</p>
+    @:&nbsp;
+    <p>Pais 2:</p>
+    <p>@Html.TextBoxFor(Model => Model.Pais2)</p>
+    @:&nbsp;
+    <p>Estadio:</p>
+    <p>@Html.TextBoxFor(Model => Model.Estadio)</p>
+
+    <input type="Submit" name="Ingresar" value="Ingresar" />
+}

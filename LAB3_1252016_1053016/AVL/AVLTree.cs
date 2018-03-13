@@ -10,6 +10,7 @@ namespace AVL
         private List<Nodo<T>> inOrden = new List<Nodo<T>>();
         private List<Nodo<T>> preOrden = new List<Nodo<T>>();
         private List<Nodo<T>> postOrden = new List<Nodo<T>>();
+        private List<string> logs = new List<string>(); 
 
         public void Delete(T value)
         {
@@ -77,16 +78,28 @@ namespace AVL
             if (factor > 1)
             {
                 if (FactorBalance(actual.Left) < 0)
-                   return actual = RotarDerIzq(actual);
+                {
+                    logs.Add("Se ha hecho una rotación Derecha Izquierda");
+                    return actual = RotarDerIzq(actual);
+                }
                 else
-                   return actual = RotarIzqIzq(actual);
+                {
+                    logs.Add("Se ha hecho una rotación Izquierda Izquierda");
+                    return actual = RotarIzqIzq(actual);
+                }
             }
             else if (factor < -1)
             {
                 if (FactorBalance(actual.Right) > 0)
+                {
+                    logs.Add("Se ha hecho una rotación Izquierda Derecha");
                     return actual = RotarIzqDer(actual);
-                else                   
-                   return actual = RotarDerDer(actual);
+                }
+                else
+                {
+                    logs.Add("Se ha hecho una rotación Derecha Derecha");
+                    return actual = RotarDerDer(actual);
+                }
             }
             return actual;
         }
@@ -142,6 +155,11 @@ namespace AVL
             Nodo<T> pivote = node.Left;
             node.Left = RotarDerDer(pivote);
             return RotarIzqIzq(node);
+        }
+
+        public List<string> rotaciones()
+        {
+            return logs; 
         }
     }
 }

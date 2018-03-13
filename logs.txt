@@ -1,0 +1,3 @@
+Se ha insertado un nuevo partido Colombia vs Guatemala
+Se ha insertado un nuevo partido Finlandia vs Costa Rica
+Se ha insertado un nuevo partido USA vs Suiza

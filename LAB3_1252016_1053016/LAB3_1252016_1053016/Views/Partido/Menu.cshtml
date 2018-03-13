@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Menu";
+}
+
+<p><h2>Menu:</h2></p>
+<p>Indique la acción que desea realizar:</p>
+<p>@Html.ActionLink("Leer archivo .Json para crear Partidos", "LecturaArchivo", FormMethod.Get)</p>
+<p>@Html.ActionLink("Crear un partido", "InsertarManual")</p>
+<p>@Html.ActionLink("Eliminar una partido", "DeleteRedirectioner")</p>
+<p>@Html.ActionLink("Regresar a menu principal", "Index")</p>
+
+
