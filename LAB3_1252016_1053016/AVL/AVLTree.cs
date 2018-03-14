@@ -10,121 +10,69 @@ namespace AVL
         private List<Nodo<T>> inOrden = new List<Nodo<T>>();
         private List<Nodo<T>> preOrden = new List<Nodo<T>>();
         private List<Nodo<T>> postOrden = new List<Nodo<T>>();
-        private List<string> logs = new List<string>();
+        private List<string> logs = new List<string>();       
 
-        public Nodo<T> FindMin(Nodo<T> root)
-        {
-            if (root == null)
-            {
-                return null;
-            }
-
-            else if (root.Left == null)
-            {
-                return root;
-            }
-
-            else
-            {
-                return FindMin(root.Left);
-            }
-        }
-
-        public void Delete(T value)
-        {
-            Delete(value);
-        }
-
-        public void Delete(T value, Nodo<T> node)
+        public Nodo<T> Delete(T value, Nodo<T> node)
         {
             Nodo<T> Min;
             if (value == null)
             {
-                throw new NullReferenceException();
+                return null;
             }
-
-            if (cabeza.Value.CompareTo(value) == 0 && cabeza.Left == null && cabeza.Right == null)
-            {
-                cabeza = null;
-            }
-
-            else if (value.CompareTo(node.Value) == -1)
-            {
-                Delete(value, node.Left);
-              //  node = Balancear(node);
-            } //look in the left
-
-            else if (value.CompareTo(node.Value) > 0)
-            {
-                Delete(value, node.Right);
-               // node = Balancear(node);
-            } //look in the right
-
             else
-            { //found node to delete
-
-                if (node.Left != null && node.Right != null) //two children
+            {
+                if (value.CompareTo(node.Value) == -1)
                 {
-                    Min = FindMin(node.Right);
-                    node.Value = Min.Value;
-                    Delete(node.Value, node.Right);
-                  //  node = Balancear(node);
-                }
+                    Delete(value, node.Left);
+                    node.Left = Delete(value, node.Left);
+
+                    if (FactorBalance(node) == -2)
+                    {
+                        if (FactorBalance(node.Right) <= 0)
+                            node = RotarDerDer(node);
+                        else
+                            node = RotarDerIzq(node);
+                    }
+                } //look in the left
+
+                else if (value.CompareTo(node.Value) == 1)
+                {
+                    node.Right = Delete(value, node.Right);
+
+                    if (FactorBalance(node) == 2)
+                    {
+                        if (FactorBalance(node.Left) >= 1)
+                            node = RotarIzqIzq(node);
+                        else
+                            node = RotarIzqDer(node);
+                    }
+                } //look in the right
 
                 else
-                { //one or zero child
-
-                    if (node.Left == null)//The root node is to be deleted
+                { //found node to delete     
+                    if (node.Right != null)
                     {
-                        if (node.Parent == null)
+                        Min = node.Right;
+                        while (Min.Left != null)
                         {
-                            cabeza = node.Right;
-                            cabeza.Parent = null;
+                            Min = Min.Left;
                         }
-                        else
+                        node.Value = Min.Value;
+                        node.Right = Delete(Min.Value, node.Right);
+
+                        if (FactorBalance(node) == 2)
                         {
-                            if (node.Right != null)
-                            {
-                                node.Right.Parent = node.Parent;
-                            }
-
-                            if (node == node.Parent.Left)
-                            {
-                                node.Parent.Left = node.Right;
-                            }
-
+                            if (FactorBalance(node.Left) >= 0)
+                                node = RotarIzqIzq(node);
                             else
-                            {
-                                node.Parent.Right = node.Right;
-                            }
+                                node = RotarIzqDer(node);
                         }
-                        node = Balancear(node);
                     }
-                    else if (node.Right == null)
-                    {
-                        if (node.Parent == null)
-                        {
-                            cabeza = node.Left;
-                            cabeza.Parent = null;
-                        }
-                        else
-                        {
-
-                            node.Left.Parent = node.Parent;
-
-                            if (node == node.Parent.Left)
-                            {
-                                node.Parent.Left = node.Left;
-                            }
-                            else
-                            {
-                                node.Parent.Right = node.Left;
-                            }
-                        }
-                        node = Balancear(node);
-                    }
+                    else
+                        return node.Left;
                 }
             }
+            return node;
         }
 
         public List<Nodo<T>> InOrden(Nodo<T> node)
