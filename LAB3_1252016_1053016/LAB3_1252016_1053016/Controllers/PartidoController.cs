@@ -130,15 +130,16 @@ namespace LAB3_1252016_1053016.Controllers
         public void DownloadLogs()
         {
             StringWriter sw = new StringWriter();
-            sw.WriteLine("Respuestas en orden Descendente");
+            sw.WriteLine("Logs de: " + DateTime.Today.ToShortDateString() );
             Response.ClearContent();
-            Response.AddHeader("Content-disposition", "Attachment;filename=Respuestas.out");
+            Response.AddHeader("Content-disposition", "Attachment;filename=Logs.txt");
             Response.ContentType = "text,out";
 
             for (int i = 0; i < logs.Count; i++)
             {
                 sw.WriteLine(logs.ElementAt(i));
             }
+            sw.Close();
 
             Response.Write(sw.ToString());
             Response.End();
