@@ -1,0 +1,32 @@
+﻿@model List<AVL.Nodo<LAB3_1252016_1053016.Models.Partido>>
+
+@{
+    Layout = null;
+}
+
+<h2>Lista de Paises</h2>
+
+<table cellpadding="2" cellspacing="2" border="1">
+    <tr>
+        <th>Número de partido</th>
+        <th>Fecha partido</th>
+        <th>Grupo</th>
+        <th>Pais 1</th>
+        <th>Pais 2</th>
+        <th>Estadio</th>
+    </tr>
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+    <tr>
+        <td>@Model.ElementAt(i).Value.NoPartido </td>
+        <td>@Model.ElementAt(i).Value.FechaPartido</td>
+        <td>@Model.ElementAt(i).Value.Grupo</td>
+        <td>@Model.ElementAt(i).Value.Pais1</td>
+        <td>@Model.ElementAt(i).Value.Pais2</td>
+        <td>@Model.ElementAt(i).Value.Estadio</td>
+        <td>@Html.ActionLink("Delete", "Delete", "Partido", new { id = i }, null)</td>
+    </tr>
+    }
+</table>
+@Html.ActionLink("Back to Menu", "Menu")

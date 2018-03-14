@@ -7,16 +7,17 @@ namespace AVL
    public class AVLTree<T> : iArbolBinario<T> where T : IComparable<T>
     {
         public Nodo<T> cabeza;
-        private List<Nodo<T>> inOrden = new List<Nodo<T>>();
+        private List<Nodo<T>> inOrder = new List<Nodo<T>>();
         private List<Nodo<T>> preOrden = new List<Nodo<T>>();
         private List<Nodo<T>> postOrden = new List<Nodo<T>>();
-        private List<string> logs = new List<string>();       
+        private List<string> logs = new List<string>();
+        private List<string> logsDelete = new List<string>(); 
 
         public Nodo<T> Delete(T value, Nodo<T> node)
         {
             Nodo<T> Min;
-            if (value == null)
-            {
+            if (value.CompareTo(node.Value) == 0)
+            {                
                 return null;
             }
             else
@@ -29,11 +30,19 @@ namespace AVL
                     if (FactorBalance(node) == -2)
                     {
                         if (FactorBalance(node.Right) <= 0)
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Derecha en el nodo " + node.Value);
                             node = RotarDerDer(node);
+                        }
+                            
                         else
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Izquierda en el nodo " + node.Value);
                             node = RotarDerIzq(node);
+                        }
+                            
                     }
-                } //look in the left
+                } 
 
                 else if (value.CompareTo(node.Value) == 1)
                 {
@@ -42,14 +51,22 @@ namespace AVL
                     if (FactorBalance(node) == 2)
                     {
                         if (FactorBalance(node.Left) >= 1)
-                            node = RotarIzqIzq(node);
+                        {
+                           logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
+                           node = RotarIzqIzq(node);
+
+                        }
                         else
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
                             node = RotarIzqDer(node);
+                        }
+                            
                     }
-                } //look in the right
+                } 
 
                 else
-                { //found node to delete     
+                {    
                     if (node.Right != null)
                     {
                         Min = node.Right;
@@ -63,9 +80,17 @@ namespace AVL
                         if (FactorBalance(node) == 2)
                         {
                             if (FactorBalance(node.Left) >= 0)
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
                                 node = RotarIzqIzq(node);
+                            }
+                                
                             else
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
                                 node = RotarIzqDer(node);
+                            }
+                                
                         }
                     }
                     else
@@ -75,9 +100,20 @@ namespace AVL
             return node;
         }
 
+        public List<Nodo<T>> InOrden()
+        {
+            return InOrden(cabeza);
+        }
+
         public List<Nodo<T>> InOrden(Nodo<T> node)
         {
-            throw new NotImplementedException();
+            if (node != null)
+            {
+                InOrden(node.Left);
+                inOrder.Add(node);
+                InOrden(node.Right);
+            }
+            return inOrder;
         } 
 
         public List<Nodo<T>> PostOrden(Nodo<T> node)
@@ -132,12 +168,12 @@ namespace AVL
             {
                 if (FactorBalance(actual.Left) < 0)
                 {
-                    logs.Add("Se ha hecho una rotación Derecha Izquierda");
+                    logs.Add("[Insert] Se ha hecho una rotación Derecha Izquierda en el nodo " + actual.Value);
                     return actual = RotarDerIzq(actual);
                 }
                 else
                 {
-                    logs.Add("Se ha hecho una rotación Izquierda Izquierda");
+                    logs.Add("[Insert] Se ha hecho una rotación Izquierda Izquierda en el nodo " + actual.Value);
                     return actual = RotarIzqIzq(actual);
                 }
             }
@@ -145,12 +181,12 @@ namespace AVL
             {
                 if (FactorBalance(actual.Right) > 0)
                 {
-                    logs.Add("Se ha hecho una rotación Izquierda Derecha");
+                    logs.Add("[Insert] Se ha hecho una rotación Izquierda Derecha en el nodo " + actual.Value);
                     return actual = RotarIzqDer(actual);
                 }
                 else
                 {
-                    logs.Add("Se ha hecho una rotación Derecha Derecha");
+                    logs.Add("[Insert] Se ha hecho una rotación Derecha Derecha en el nodo " + actual.Value);
                     return actual = RotarDerDer(actual);
                 }
             }
@@ -213,6 +249,27 @@ namespace AVL
         public List<string> rotaciones()
         {
             return logs; 
+        }
+
+        public List<string> rotacionesDelete()
+        {
+            return logsDelete;
+        }
+
+        public bool Limpiar()
+        {
+            try
+            {
+                inOrder.Clear();
+                preOrden.Clear();
+                postOrden.Clear();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
     }
 }

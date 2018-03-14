@@ -14,16 +14,27 @@ namespace LAB3_1252016_1053016.Controllers
     {
         AVLTree <Partido> AVLPartido = new AVLTree<Partido>();
         List<string> logs = new List<string>();
-        List<string> logsRotaciones = new List<string>();
-
+        List<string> logsRotaciones = new List<string>();         
+        bool bandera = false; 
         // GET: Partido
         public ActionResult Index()
         {
+            PrintLogs(logs);
+            bandera = false;
+            Session["bandera"] = Session["bandera"] ?? bandera;
             return View();
         }
-        [HttpPost]
+
+        /// <summary>
+        /// Crear DropDownList para seleccionar campo a buscar
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        /// 
+        [HttpGet]
         public ActionResult Menu(FormCollection form)
-        {            
+        {
+            string searchBy = form["comboBox"];
             Session["AVLPartido"] = Session["AVLPartido"] ?? AVLPartido;
             Session["Logs"] = Session["Logs"] ?? logs;
             return View("Menu");
@@ -80,15 +91,17 @@ namespace LAB3_1252016_1053016.Controllers
                                 logsRotaciones = AVLPartido.rotaciones(); 
                                 logs.Add("Se ha insertado un nuevo partido " + partido); 
                             }
-                            Session["AVLPartido"] = AVLPartido;                            
+                            Session["AVLPartido"] = AVLPartido;
+                            List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza); 
                             PrintLogs(logsRotaciones);
                             PrintLogs(logs);
                             logsRotaciones.Clear();
+                            return View("PartidoSuccess", tempList);
                         }
                     }
                 }
             }
-            return View("Index");
+            return View("Menu"); 
         }
 
         [HttpGet]
@@ -113,23 +126,40 @@ namespace LAB3_1252016_1053016.Controllers
             return View("InsertarManualView"); 
         }
 
+        public ActionResult Delete(int id)
+        {
+            AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
+            AVLPartido.Limpiar();
+            List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza);
+            AVLPartido.Delete(tempList.ElementAt(id).Value, AVLPartido.cabeza);
+            Session["AVLPartido"] = AVLPartido;
+            AVLPartido.Limpiar();
+            tempList = AVLPartido.InOrden(AVLPartido.cabeza);
+            return View("PartidoSuccess", tempList); 
+        }
+
+        public ActionResult DeleteRedirect()
+        {
+            AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
+            AVLPartido.Limpiar();
+            List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza);           
+            Session["AVLPartido"] = AVLPartido;
+            AVLPartido.Limpiar();
+            tempList = AVLPartido.InOrden(AVLPartido.cabeza);
+            return View("PartidoSuccess", tempList);
+        }
+
         private void PrintLogs(List<string> logs)
         {
             //Se debe redefinir ruta si se está utilizando en otro ordenador
-            StreamWriter writer = new StreamWriter(@"D:\Alex Rodríguez\Desktop\EDDLaboratorio3\logs.txt", false);
-
-            for (int i = 0; i < logs.Count; i++)
-            {
-                writer.WriteLine(logs.ElementAt(i));
-            }
+            StreamWriter writer = new StreamWriter(@"D:\Alex Rodríguez\Desktop\EDDLaboratorio3\logs.txt", true);
+                for (int i = 0; i < logs.Count; i++)
+                {
+                    writer.WriteLine(logs.ElementAt(i));
+                }
             writer.Close();
         }
-
-
-
-
-
-
-
-    }
+            
+          
+     }    
 }
