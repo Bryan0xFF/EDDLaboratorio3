@@ -14,7 +14,8 @@ namespace LAB3_1252016_1053016.Controllers
     {
         AVLTree <Partido> AVLPartido = new AVLTree<Partido>();
         List<string> logs = new List<string>();
-        List<string> logsRotaciones = new List<string>();         
+        List<string> logsRotaciones = new List<string>();
+        List<string> logsRotacionesDelete = new List<string>();
         bool bandera = false; 
         // GET: Partido
         public ActionResult Index()
@@ -88,7 +89,7 @@ namespace LAB3_1252016_1053016.Controllers
                             {
                                 AVLPartido.Insert(lista.ElementAt(i));
                                 string partido = lista.ElementAt(i).Pais1 + " vs " + lista.ElementAt(i).Pais2;
-                                logsRotaciones = AVLPartido.rotaciones(); 
+                                logsRotaciones = AVLPartido.Rotaciones(); 
                                 logs.Add("Se ha insertado un nuevo partido " + partido); 
                             }
                             Session["AVLPartido"] = AVLPartido;
@@ -116,7 +117,7 @@ namespace LAB3_1252016_1053016.Controllers
             logs = (List<string>)Session["Logs"];
             AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
             AVLPartido.Insert(partido);
-            logsRotaciones = AVLPartido.rotaciones(); 
+            logsRotaciones = AVLPartido.Rotaciones(); 
             string Partido = partido.Pais1 + " vs " + partido.Pais2;
             logs.Add("Se ha insertado un nuevo partido " + Partido); 
             Session["AVLPartido"] = AVLPartido;
@@ -132,6 +133,8 @@ namespace LAB3_1252016_1053016.Controllers
             AVLPartido.Limpiar();
             List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza);
             AVLPartido.Delete(tempList.ElementAt(id).Value, AVLPartido.cabeza);
+            logsRotacionesDelete = AVLPartido.RotacionesDelete();
+            logs.Add("Se ha eliminado un partido " + tempList.ElementAt(id).Value.Pais1 + "vs" + tempList.ElementAt(id).Value.Pais2);
             Session["AVLPartido"] = AVLPartido;
             AVLPartido.Limpiar();
             tempList = AVLPartido.InOrden(AVLPartido.cabeza);

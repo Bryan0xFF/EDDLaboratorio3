@@ -246,12 +246,12 @@ namespace AVL
             return RotarIzqIzq(node);
         }
 
-        public List<string> rotaciones()
+        public List<string> Rotaciones()
         {
             return logs; 
         }
 
-        public List<string> rotacionesDelete()
+        public List<string> RotacionesDelete()
         {
             return logsDelete;
         }
