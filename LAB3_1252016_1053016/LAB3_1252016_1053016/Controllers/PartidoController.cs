@@ -151,15 +151,23 @@ namespace LAB3_1252016_1053016.Controllers
 
         private void PrintLogs(List<string> logs)
         {
-            //Se debe redefinir ruta si se está utilizando en otro ordenador
-            StreamWriter writer = new StreamWriter(@"D:\Alex Rodríguez\Desktop\EDDLaboratorio3\logs.txt", true);
-                for (int i = 0; i < logs.Count; i++)
-                {
-                    writer.WriteLine(logs.ElementAt(i));
-                }
-            writer.Close();
+            StringWriter sw = new StringWriter();
+            sw.WriteLine("Log" + DateTime.Now.ToShortDateString());
+            Response.ClearContent();
+            Response.AddHeader("Content-disposition", "Attachment;filename=Respuestas.out");
+            Response.ContentType = "text,out";
+
+            for (int i = 0; i < logs.Count; i++)
+            {
+                sw.WriteLine(logs.ElementAt(i));
+            }
+
+            Response.Write(sw.ToString());
+            Response.End();
+            sw.Close();
         }
-            
+        
+        
           
-     }    
+    }    
 }
