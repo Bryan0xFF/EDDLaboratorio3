@@ -16,12 +16,22 @@ namespace LAB3_1252016_1053016.Models
 
         public int CompareTo(Partido other)
         {
-            return this.NoPartido.CompareTo(other.NoPartido); 
+            
+                return this.NoPartido.CompareTo(other.NoPartido);
+            
         }
 
-        //public int CompareTo(Partido other)
-        //{
-        //    return this.FechaPartido.CompareTo(other.FechaPartido); 
-        //}
+        public int Compare(Partido other, bool opcion)
+        {
+            //Fecha partido
+            if (opcion == true)
+            {
+                return this.FechaPartido.CompareTo(other.FechaPartido);
+            }
+            else
+            {
+                return this.NoPartido.CompareTo(other.NoPartido);
+            }
+        }
     }
 }

@@ -109,7 +109,9 @@ namespace LAB3_1252016_1053016.Controllers
             Session["AVLPartido"] = AVLPartido;
             PrintLogs(logsRotaciones);
             PrintLogs(logs);
-            logsRotaciones.Clear(); 
+            logsRotaciones.Clear();
+            Session["Logs"] = logs;
+            Session["AVLPartido"] = AVLPartido;
             return View("InsertarManualView"); 
         }
 
@@ -125,11 +127,21 @@ namespace LAB3_1252016_1053016.Controllers
             writer.Close();
         }
 
+        public void DownloadLogs()
+        {
+            StringWriter sw = new StringWriter();
+            sw.WriteLine("Respuestas en orden Descendente");
+            Response.ClearContent();
+            Response.AddHeader("Content-disposition", "Attachment;filename=Respuestas.out");
+            Response.ContentType = "text,out";
 
+            for (int i = 0; i < logs.Count; i++)
+            {
+                sw.WriteLine(logs.ElementAt(i));
+            }
 
-
-
-
-
+            Response.Write(sw.ToString());
+            Response.End();
+        }
     }
 }
