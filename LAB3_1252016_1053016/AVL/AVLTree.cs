@@ -53,10 +53,10 @@ namespace AVL
             throw new NotImplementedException();
         }
 
-        public List<Nodo<T>> PreOrden(Nodo<T> node)
-        {
-            throw new NotImplementedException();
-        }
+        //public List<Nodo<T>> PreOrden(Nodo<T> node)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public Nodo<T> Insert(T value)
         {
