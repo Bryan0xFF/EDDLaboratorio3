@@ -191,6 +191,26 @@ namespace AVL
             return node;
         }
 
+        public Nodo<T> Search(T value, Nodo<T> node)
+        {
+            Nodo<T> result = new Nodo<T>();
+            if (node == null)
+                return null;
+
+            else if (node.Value.CompareTo(value) == 0)
+            {
+               
+                return node; 
+            }  
+            else if (node.Value.CompareTo(value) > 0)
+                result = Search(value, node.Left);
+
+            else if (node.Value.CompareTo(value) < 0)
+                result = Search(value, node.Right);
+
+            return result;
+        }
+
         public Nodo<T> Balancear(Nodo<T> actual)
         {
             int factor = FactorBalance(actual);

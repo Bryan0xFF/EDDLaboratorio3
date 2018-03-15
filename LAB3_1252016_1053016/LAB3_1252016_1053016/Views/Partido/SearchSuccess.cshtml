@@ -1,0 +1,73 @@
+﻿@model LAB3_1252016_1053016.Models.Partido
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SearchSuccess</title>
+</head>
+<body>
+    <div>
+        <h4>Partido</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.NoPartido)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.NoPartido)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FechaPartido)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FechaPartido)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Grupo)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Grupo)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Pais1)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Pais1)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Pais2)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Pais2)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Estadio)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Estadio)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>       
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

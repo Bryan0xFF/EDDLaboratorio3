@@ -15,7 +15,7 @@ namespace LAB3_1252016_1053016.Controllers
         AVLTree <Partido> AVLPartido = new AVLTree<Partido>();
         List<string> logs = new List<string>();        
         List<string> aux = new List<string>();
-        bool bandera = false; 
+        Nodo<Partido> searched = new Nodo<Partido>();  
         // GET: Partido
         public ActionResult Index()
         {            
@@ -157,6 +157,26 @@ namespace LAB3_1252016_1053016.Controllers
             AVLPartido.Limpiar();
             tempList = AVLPartido.InOrden(AVLPartido.cabeza);
             return View("PartidoSuccess", tempList);
+        }
+
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return View(); 
+        }
+
+        [HttpPost]
+        public ActionResult Search(FormCollection form)
+        {
+            string param = form["searching"];
+            Partido search = new Partido
+            {
+                NoPartido = Convert.ToInt32(param)
+            };
+            AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
+            searched = AVLPartido.Search(search, AVLPartido.cabeza);
+            search = (Partido)searched.Value;
+            return View("SearchSuccess", search); 
         }
 
         public ActionResult Download()

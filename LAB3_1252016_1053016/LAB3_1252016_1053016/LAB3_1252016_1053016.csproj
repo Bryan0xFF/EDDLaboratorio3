@@ -185,6 +185,8 @@
     <Content Include="Views\Partido\Menu.cshtml" />
     <Content Include="Views\Partido\PartidoSuccess.cshtml" />
     <Content Include="Views\Partido\DownloadSuccess.cshtml" />
+    <Content Include="Views\Partido\Search.cshtml" />
+    <Content Include="Views\Partido\SearchSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
