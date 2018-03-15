@@ -13,16 +13,12 @@ namespace LAB3_1252016_1053016.Controllers
     public class PartidoController : Controller
     {
         AVLTree <Partido> AVLPartido = new AVLTree<Partido>();
-        List<string> logs = new List<string>();
-        List<string> logsRotaciones = new List<string>();
-        List<string> logsRotacionesDelete = new List<string>();
+        List<string> logs = new List<string>();        
+        List<string> aux = new List<string>();
         bool bandera = false; 
         // GET: Partido
         public ActionResult Index()
-        {
-            PrintLogs(logs);
-            bandera = false;
-            Session["bandera"] = Session["bandera"] ?? bandera;
+        {            
             return View();
         }
 
@@ -88,15 +84,18 @@ namespace LAB3_1252016_1053016.Controllers
                             for (int i = 0; i < lista.Count; i++)
                             {
                                 AVLPartido.Insert(lista.ElementAt(i));
-                                string partido = lista.ElementAt(i).Pais1 + " vs " + lista.ElementAt(i).Pais2;
-                                logsRotaciones = AVLPartido.Rotaciones(); 
-                                logs.Add("Se ha insertado un nuevo partido " + partido); 
+                                string partido = lista.ElementAt(i).Pais1 + " vs " + lista.ElementAt(i).Pais2;                                
+                                logs.Add("Se ha insertado un nuevo partido " + partido);
+                                aux = AVLPartido.Rotaciones(); 
+                            }
+
+                            for (int i = 0; i < aux.Count; i++)
+                            {
+                                logs.Add(aux.ElementAt(i));
                             }
                             Session["AVLPartido"] = AVLPartido;
-                            List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza); 
-                            PrintLogs(logsRotaciones);
-                            PrintLogs(logs);
-                            logsRotaciones.Clear();
+                            Session["Logs"] = logs;
+                            List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza);                             
                             return View("PartidoSuccess", tempList);
                         }
                     }
@@ -116,26 +115,34 @@ namespace LAB3_1252016_1053016.Controllers
         {
             logs = (List<string>)Session["Logs"];
             AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
-            AVLPartido.Insert(partido);
-            logsRotaciones = AVLPartido.Rotaciones(); 
+            AVLPartido.Insert(partido);            
             string Partido = partido.Pais1 + " vs " + partido.Pais2;
-            logs.Add("Se ha insertado un nuevo partido " + Partido); 
+            logs.Add("Se ha insertado un nuevo partido " + Partido);
+            aux = AVLPartido.Rotaciones();
+            for (int i = 0; i < aux.Count; i++)
+            {
+                logs.Add(aux.ElementAt(i));
+            }
             Session["AVLPartido"] = AVLPartido;
-            PrintLogs(logsRotaciones);
-            PrintLogs(logs);
-            logsRotaciones.Clear(); 
+            Session["Logs"] = logs;
             return View("InsertarManualView"); 
         }
 
         public ActionResult Delete(int id)
         {
             AVLPartido = (AVLTree<Partido>)Session["AVLPartido"];
+            logs = (List<string>)Session["Logs"]; 
             AVLPartido.Limpiar();
             List<Nodo<Partido>> tempList = AVLPartido.InOrden(AVLPartido.cabeza);
-            AVLPartido.Delete(tempList.ElementAt(id).Value, AVLPartido.cabeza);
-            logsRotacionesDelete = AVLPartido.RotacionesDelete();
+            AVLPartido.Delete(tempList.ElementAt(id).Value, AVLPartido.cabeza);            
             logs.Add("Se ha eliminado un partido " + tempList.ElementAt(id).Value.Pais1 + "vs" + tempList.ElementAt(id).Value.Pais2);
+            aux = AVLPartido.RotacionesDelete();
+            for (int i = 0; i < aux.Count; i++)
+            {
+                logs.Add(aux.ElementAt(i));
+            }
             Session["AVLPartido"] = AVLPartido;
+            Session["Logs"] = logs;
             AVLPartido.Limpiar();
             tempList = AVLPartido.InOrden(AVLPartido.cabeza);
             return View("PartidoSuccess", tempList); 
@@ -152,25 +159,32 @@ namespace LAB3_1252016_1053016.Controllers
             return View("PartidoSuccess", tempList);
         }
 
-        private void PrintLogs(List<string> logs)
+        public ActionResult Download()
         {
+            PrintLogs(); 
+            return View("DownloadSuccess"); 
+        }
+
+       
+        private void PrintLogs()
+        {
+            logs = (List<string>)Session["Logs"]; 
             StringWriter sw = new StringWriter();
-            sw.WriteLine("Log" + DateTime.Now.ToShortDateString());
+            sw.WriteLine("Logs de " + DateTime.Now.ToShortDateString());
             Response.ClearContent();
-            Response.AddHeader("Content-disposition", "Attachment;filename=Respuestas.out");
+            Response.AddHeader("Content-disposition", "Attachment;filename=Logs.txt");
             Response.ContentType = "text,out";
 
-            for (int i = 0; i < logs.Count; i++)
+            for (int i = 0; i < this.logs.Count; i++)
             {
-                sw.WriteLine(logs.ElementAt(i));
-            }
+                sw.WriteLine(this.logs.ElementAt(i));
+            }         
 
             Response.Write(sw.ToString());
             Response.End();
             sw.Close();
-        }
-        
-        
-          
+        }  
+
+
     }    
 }

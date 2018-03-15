@@ -184,6 +184,7 @@
     <Content Include="Views\Partido\InsertarManualView.cshtml" />
     <Content Include="Views\Partido\Menu.cshtml" />
     <Content Include="Views\Partido\PartidoSuccess.cshtml" />
+    <Content Include="Views\Partido\DownloadSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
