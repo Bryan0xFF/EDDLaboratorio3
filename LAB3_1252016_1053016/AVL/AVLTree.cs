@@ -11,94 +11,26 @@ namespace AVL
         private List<Nodo<T>> preOrden = new List<Nodo<T>>();
         private List<Nodo<T>> postOrden = new List<Nodo<T>>();
         private List<string> logs = new List<string>();
-        private List<string> logsDelete = new List<string>(); 
+        private List<string> logsDelete = new List<string>();
 
-        public Nodo<T> Delete(T value, Nodo<T> node)
+        public Nodo<T> FindMin(Nodo<T> root)
         {
-            Nodo<T> Min;
-            if (value.CompareTo(node.Value) == 0)
-            {                
+            if (root == null)
+            {
                 return null;
             }
+
+            else if (root.Left == null)
+            {
+                return root;
+
+            }
+
             else
             {
-                if (value.CompareTo(node.Value) == -1)
-                {
-                    Delete(value, node.Left);
-                    node.Left = Delete(value, node.Left);
-
-                    if (FactorBalance(node) == -2)
-                    {
-                        if (FactorBalance(node.Right) <= 0)
-                        {
-                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Derecha en el nodo " + node.Value);
-                            node = RotarDerDer(node);
-                        }
-                            
-                        else
-                        {
-                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Izquierda en el nodo " + node.Value);
-                            node = RotarDerIzq(node);
-                        }
-                            
-                    }
-                } 
-
-                else if (value.CompareTo(node.Value) == 1)
-                {
-                    node.Right = Delete(value, node.Right);
-
-                    if (FactorBalance(node) == 2)
-                    {
-                        if (FactorBalance(node.Left) >= 1)
-                        {
-                           logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
-                           node = RotarIzqIzq(node);
-
-                        }
-                        else
-                        {
-                            logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
-                            node = RotarIzqDer(node);
-                        }
-                            
-                    }
-                } 
-
-                else
-                {    
-                    if (node.Right != null)
-                    {
-                        Min = node.Right;
-                        while (Min.Left != null)
-                        {
-                            Min = Min.Left;
-                        }
-                        node.Value = Min.Value;
-                        node.Right = Delete(Min.Value, node.Right);
-
-                        if (FactorBalance(node) == 2)
-                        {
-                            if (FactorBalance(node.Left) >= 0)
-                            {
-                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
-                                node = RotarIzqIzq(node);
-                            }
-                                
-                            else
-                            {
-                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
-                                node = RotarIzqDer(node);
-                            }
-                                
-                        }
-                    }
-                    else
-                        return node.Left;
-                }
+                return FindMin(root.Left);
             }
-            return node;
-        }
+        }       
 
         public List<Nodo<T>> InOrden()
         {
@@ -156,6 +88,105 @@ namespace AVL
                 node.Right = Insert(node.Right, value);
                 node.Right.Parent = node;
                 node = Balancear(node);
+            }
+            return node;
+        }
+
+        public Nodo<T> Delete(T value, Nodo<T> node)
+        {
+            Nodo<T> Min;
+            Nodo<T> Replace; 
+
+            if (cabeza.Left == null && cabeza.Right == null)
+            {
+                cabeza = null;
+                return cabeza;
+            }
+            else
+            if (node.Value.CompareTo(cabeza.Value) == 0 && cabeza.Parent == null)
+            {
+                Replace = FindMin(cabeza.Left);
+                cabeza.Value = Replace.Value;
+                cabeza.Parent = null;
+                cabeza = Delete(Replace.Value, cabeza.Left);                         
+            }          
+            else
+            {
+                if (value.CompareTo(node.Value) == -1)
+                {                    
+                    node.Left = Delete(value, node.Left);
+
+                    if (FactorBalance(node) == -2)
+                    {
+                        if (FactorBalance(node.Right) <= 0)
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Derecha en el nodo " + node.Value);
+                            node = RotarDerDer(node);
+                        }
+
+                        else
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Izquierda en el nodo " + node.Value);
+                            node = RotarDerIzq(node);
+                        }
+
+                    }
+                }
+
+                else if (value.CompareTo(node.Value) == 1)
+                {
+                    node.Right = Delete(value, node.Right);
+
+                    if (FactorBalance(node) == 2)
+                    {
+                        if (FactorBalance(node.Left) >= 1)
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
+                            node = RotarIzqIzq(node);
+
+                        }
+                        else
+                        {
+                            logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
+                            node = RotarIzqDer(node);
+                        }
+
+                    }
+                }
+
+                else
+                {
+                    if (node.Right != null)
+                    {
+                        Min = node.Right;
+                        while (Min.Left != null)
+                        {
+                            Min = Min.Left;
+                        }
+                        node.Value = Min.Value;
+                        node.Right = Delete(Min.Value, node.Right);
+
+                        if (FactorBalance(node) == 2)
+                        {
+                            if (FactorBalance(node.Left) >= 0)
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Izquierda en el nodo " + node.Value);
+                                node = RotarIzqIzq(node);
+                            }
+
+                            else
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Izquierda Derecha en el nodo " + node.Value);
+                                node = RotarIzqDer(node);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        return node.Left;
+                    }
+                }
             }
             return node;
         }

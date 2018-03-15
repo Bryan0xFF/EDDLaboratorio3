@@ -28,21 +28,8 @@ Value = "NumeroPartido",
     Seleccione <select name="comboBox" @Html.DropDownList("DropDownList", listado) />
 
     <div>
-        <input type="submit" value="Menu" class="btn btn-default" /> |    @Html.ActionLink("Menu", "Menu")
+       @Html.ActionLink("Menu", "Menu")
     </div>
 </form>
-\
-<form action="Menu" method="get">
-    Seleccione: <select name="comboBox" @Html.DropDownList("DropDownList", listado) />
 
-    <div>
-        @using (Html.BeginForm("Menu", "Partido"))
-        {
-            <input type="submit" value="Ok" />
-        }
-        @*@Html.ActionLink("Menu", "Menu")*@
-
-    </div>
-
-</form>
 
