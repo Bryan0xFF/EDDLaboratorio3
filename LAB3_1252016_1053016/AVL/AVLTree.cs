@@ -60,7 +60,9 @@ namespace AVL
 
         public Nodo<T> Insert(T value)
         {
-            return cabeza = Insert(cabeza, value);
+            cabeza = Insert(cabeza, value);
+            cabeza.Parent = null;
+            return cabeza;
         }
 
         public Nodo<T> Insert(Nodo<T> node, T value)
@@ -103,12 +105,29 @@ namespace AVL
                 return cabeza;
             }
             else
-            if (node.Value.CompareTo(cabeza.Value) == 0 && cabeza.Parent == null)
+
+            if (node.Value.CompareTo(cabeza.Value) == 0 && node.Parent == null)
             {
-                Replace = FindMin(cabeza.Left);
-                cabeza.Value = Replace.Value;
-                cabeza.Parent = null;
-                cabeza = Delete(Replace.Value, cabeza.Left);                         
+                if (cabeza.Right != null)
+                {
+                    Replace = FindMin(cabeza.Right);
+                    cabeza.Value = Replace.Value;
+                    cabeza.Parent = null;
+                    cabeza.Right = Delete(Replace.Value, cabeza.Right);
+                }
+
+                else if (cabeza.Left != null)
+                {
+                    Replace = FinMinLeft(cabeza.Left);
+                    cabeza.Value = Replace.Value;
+                    cabeza.Parent = null;
+                    cabeza.Left = Delete(Replace.Value, cabeza.Left);
+                }
+                else
+                {
+                    cabeza = null;
+                }
+                                       
             }          
             else
             {
@@ -156,9 +175,11 @@ namespace AVL
 
                 else
                 {
+                   
                     if (node.Right != null)
                     {
                         Min = node.Right;
+
                         while (Min.Left != null)
                         {
                             Min = Min.Left;
@@ -182,15 +203,64 @@ namespace AVL
 
                         }
                     }
+                    if (node.Left != null)
+                    {
+                        Min = node.Left;
+
+                        while (Min.Right != null)
+                        {
+                            Min = Min.Right;
+                        }
+                        node.Value = Min.Value;
+                        node.Left = Delete(Min.Value, node.Left);
+
+                        if (FactorBalance(node) == -2)
+                        {
+                            if (FactorBalance(node.Left) <= 0)
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Derecha en el nodo " + node.Value);
+                                node = RotarDerDer(node);
+                            }
+
+                            else
+                            {
+                                logsDelete.Add("[Delete] Se ha hecho una rotación Derecha Izquierda en el nodo " + node.Value);
+                                node = RotarDerIzq(node);
+                            }
+                        }
+                    }
+                    //if (cabeza.Value.CompareTo(value) == 0)
+                    //{
+                    //    if (cabeza.Right == null)
+                    //    {
+                    //        Replace = FinMinLeft(node.Right);
+                    //        cabeza.Value = Replace.Value;
+                    //        cabeza.Parent = null;
+                    //        Delete(cabeza.Value, node.Right);
+                    //    }
+                    //    else if (cabeza.Left == null)
+                    //    {
+                    //        Replace = FindMin(node.Left);
+                    //        cabeza.Value = Replace.Value;
+                    //        cabeza.Parent = null;
+                    //        Delete(cabeza.Value, node.Left);
+                    //    }
+                    //    else
+                    //    {
+                    //        return null;
+                    //    }
+                    //}
                     else
                     {
-                        return node.Left;
+                        node = null;
+                        return node;
                     }
                 }
             }
             return node;
         }
 
+<<<<<<< HEAD
         public Nodo<T> Search(T value, Nodo<T> node)
         {
             Nodo<T> result = new Nodo<T>();
@@ -211,6 +281,28 @@ namespace AVL
             return result;
         }
 
+=======
+        private Nodo<T> FinMinLeft(Nodo<T> root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            else if (root.Right == null)
+            {
+                return root;
+
+            }
+
+            else
+            {
+                return FindMin(root.Right);
+            }
+        }
+
+        #region Rotaciones
+>>>>>>> 372f89a51be3aecbf04039e040e015b3e8eab9af
         public Nodo<T> Balancear(Nodo<T> actual)
         {
             int factor = FactorBalance(actual);
@@ -272,6 +364,9 @@ namespace AVL
             Nodo<T> pivote = node.Left;
             node.Left = pivote.Right;
             pivote.Right = node;
+            pivote.Parent = node.Parent;
+            node.Parent = pivote;
+            node.Right = null;
             return pivote;
         }
 
@@ -280,6 +375,9 @@ namespace AVL
             Nodo<T> pivote = node.Right;
             node.Right = pivote.Left;
             pivote.Left = node;
+            pivote.Parent = node.Parent;
+            node.Parent = pivote;
+            node.Left = null;
             return pivote;
         }
 
@@ -299,9 +397,11 @@ namespace AVL
 
         public List<string> Rotaciones()
         {
-            return logs; 
+            return logs;
         }
+        #endregion
 
+        #region Extra
         public List<string> RotacionesDelete()
         {
             return logsDelete;
@@ -322,5 +422,8 @@ namespace AVL
                 return false;
             }
         }
+        #endregion
+
+
     }
 }
